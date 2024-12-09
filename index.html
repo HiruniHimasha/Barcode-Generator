@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate Barcode</title>
+    <script src="JsBarcode.all.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div>
+        <div id="demo">
+            <h1>Generate Barcode</h1>
+            <p>Enter Barcode Value:
+                <input type="text" id="txt-input" placeholder="Enter text or URL" />
+                <button id="btn-generate">Generate Barcode</button>
+            </p>
+
+            <!-- Barcode container -->
+            <div id="barcode-container">
+                <svg id="barcode"></svg>
+            </div>
+
+            <button id="btn-download">Download Barcode</button>
+        </div>
+
+        <script>
+            document.getElementById("btn-generate").addEventListener('click', function () {
+                let value = document.getElementById("txt-input").value;
+                if (value.trim() === "") {
+                    alert("Please enter a value to generate the barcode.");
+                    return;
+                }
+                JsBarcode("#barcode", value);
+            });
+
+            document.getElementById("btn-download").addEventListener('click', function () {
+                const svg = document.querySelector("#barcode");
+                const serializer = new XMLSerializer();
+                const source = serializer.serializeToString(svg);
+                const blob = new Blob([source], { type: "image/svg+xml" });
+                const url = URL.createObjectURL(blob);
+
+                const link = document.createElement("a");
+                link.href = url;
+                link.download = "Barcode.svg";
+                link.click();
+                URL.revokeObjectURL(url);
+            });
+        </script>
+    </div>
+</body>
+</html>
